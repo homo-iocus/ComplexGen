@@ -33,12 +33,12 @@ typedef TinyVector<double, 3> vec3d;
 
 std::string GetFileExtension(const std::string &FileName)
 {
-    if (FileName.find_last_of(".") != std::string::npos)
-        return FileName.substr(FileName.find_last_of(".") + 1);
-    return "";
+	if (FileName.find_last_of(".") != std::string::npos)
+		return FileName.substr(FileName.find_last_of(".") + 1);
+	return "";
 }
 
-void save_all_curves(const std::vector<CurveFitter*>& curve_fitters, const std::vector<string>& curve_type, int split,  const char* fn)
+void save_all_curves(const std::vector<CurveFitter *> &curve_fitters, const std::vector<string> &curve_type, int split, const char *fn)
 {
 	size_t counter = 1;
 	std::ofstream file(fn);
@@ -49,19 +49,18 @@ void save_all_curves(const std::vector<CurveFitter*>& curve_fitters, const std::
 	file.close();
 }
 
-void save_all_curves_proj_ply(const std::vector<CurveFitter*>& curve_fitters, const std::vector<string>& curve_type, const char* fn)
+void save_all_curves_proj_ply(const std::vector<CurveFitter *> &curve_fitters, const std::vector<string> &curve_type, const char *fn)
 {
 	std::vector<vec3d> pts;
 	for (size_t i = 0; i < curve_fitters.size(); i++)
 	{
 		pts.insert(pts.end(), curve_fitters[i]->projection_pts.begin(), curve_fitters[i]->projection_pts.end());
 	}
-	
-	save_pts_ply(fn, pts);
 
+	save_pts_ply(fn, pts);
 }
 
-void save_all_curves_seg_ply(const std::vector<CurveFitter*>& curve_fitters, const std::vector<string>& curve_type, const char* fn)
+void save_all_curves_seg_ply(const std::vector<CurveFitter *> &curve_fitters, const std::vector<string> &curve_type, const char *fn)
 {
 	std::vector<vec3d> pts;
 	for (size_t i = 0; i < curve_fitters.size(); i++)
@@ -71,10 +70,9 @@ void save_all_curves_seg_ply(const std::vector<CurveFitter*>& curve_fitters, con
 	}
 
 	save_pts_ply(fn, pts);
-
 }
 
-void save_all_input_patch_normals(const char* fn, const std::vector<std::vector<vec3d>> &pts_all, const std::vector<std::vector<vec3d>> &normals_all)
+void save_all_input_patch_normals(const char *fn, const std::vector<std::vector<vec3d>> &pts_all, const std::vector<std::vector<vec3d>> &normals_all)
 {
 	std::vector<vec3d> pts, normals;
 	for (size_t i = 0; i < pts_all.size(); i++)
@@ -86,10 +84,10 @@ void save_all_input_patch_normals(const char* fn, const std::vector<std::vector<
 	save_pts_normal_xyz(fn, pts, normals);
 }
 
-void save_all_patches(const std::vector<SurfFitter*>& surf_fitters, const std::vector<string>& surf_type, int usplit, int vsplit, const char* fn)
+void save_all_patches(const std::vector<SurfFitter *> &surf_fitters, const std::vector<string> &surf_type, int usplit, int vsplit, const char *fn)
 {
 	size_t counter = 1;
-	
+
 	std::ofstream file(fn);
 	for (size_t i = 0; i < surf_type.size(); i++)
 	{
@@ -98,7 +96,7 @@ void save_all_patches(const std::vector<SurfFitter*>& surf_fitters, const std::v
 	file.close();
 }
 
-void gather_all_patches_pts_faces(const std::vector<SurfFitter*>& surf_fitters, std::vector<vec3d>& pts, std::vector<std::vector<size_t>>& faces, std::vector<size_t>& face2patch)
+void gather_all_patches_pts_faces(const std::vector<SurfFitter *> &surf_fitters, std::vector<vec3d> &pts, std::vector<std::vector<size_t>> &faces, std::vector<size_t> &face2patch)
 {
 	pts.clear();
 	faces.clear();
@@ -113,16 +111,16 @@ void gather_all_patches_pts_faces(const std::vector<SurfFitter*>& surf_fitters, 
 		{
 			for (size_t k = 0; k < v_split - 1; k++)
 			{
-				faces.push_back(std::vector<size_t>({ counter + j * v_split + k, counter + (j + 1) * v_split + k, counter + (j + 1) * v_split + k + 1, counter + j * v_split + k + 1 }));
+				faces.push_back(std::vector<size_t>({counter + j * v_split + k, counter + (j + 1) * v_split + k, counter + (j + 1) * v_split + k + 1, counter + j * v_split + k + 1}));
 				face2patch.push_back(i);
 			}
 		}
-		
+
 		if (surf_fitters[i]->u_closed)
 		{
 			for (size_t j = 0; j < v_split - 1; j++)
 			{
-				faces.push_back(std::vector<size_t>({ counter + (u_split - 1) * v_split + j, counter + j, counter + j + 1, counter + (u_split - 1) * v_split + j + 1 }));
+				faces.push_back(std::vector<size_t>({counter + (u_split - 1) * v_split + j, counter + j, counter + j + 1, counter + (u_split - 1) * v_split + j + 1}));
 				face2patch.push_back(i);
 			}
 		}
@@ -131,25 +129,24 @@ void gather_all_patches_pts_faces(const std::vector<SurfFitter*>& surf_fitters, 
 		{
 			for (size_t j = 0; j < u_split - 1; j++)
 			{
-				faces.push_back(std::vector<size_t>({ counter + j * v_split + v_split - 1, counter + (j + 1) * v_split + v_split - 1, counter + (j + 1) * v_split, counter + j * v_split}));
+				faces.push_back(std::vector<size_t>({counter + j * v_split + v_split - 1, counter + (j + 1) * v_split + v_split - 1, counter + (j + 1) * v_split, counter + j * v_split}));
 				face2patch.push_back(i);
 			}
 		}
 
 		if (surf_fitters[i]->u_closed && surf_fitters[i]->v_closed)
 		{
-			faces.push_back(std::vector<size_t>({ counter, counter + (u_split - 1) * v_split, counter + u_split * v_split - 1, counter + v_split - 1 }));
+			faces.push_back(std::vector<size_t>({counter, counter + (u_split - 1) * v_split, counter + u_split * v_split - 1, counter + v_split - 1}));
 		}
-
 
 		counter += surf_fitters[i]->grid_pts.size();
 	}
 }
 
-bool get_cylindercone_axis_by_neighbors(const std::string& cur_patch_type, const std::vector<int>&nn_curve, const std::vector<CurveFitter*> &curve_fitters, const std::vector<string>& curve_type, const std::vector<std::vector<vec3d>> &curves, double th_same_dir_cos, vec3d& tmp_axis)
+bool get_cylindercone_axis_by_neighbors(const std::string &cur_patch_type, const std::vector<int> &nn_curve, const std::vector<CurveFitter *> &curve_fitters, const std::vector<string> &curve_type, const std::vector<std::vector<vec3d>> &curves, double th_same_dir_cos, vec3d &tmp_axis)
 {
 	bool axis_valid = false;
-	//axis stored in tmp_axis
+	// axis stored in tmp_axis
 	if (cur_patch_type == "Cylinder")
 	{
 		if (nn_curve.size() == 2)
@@ -171,17 +168,16 @@ bool get_cylindercone_axis_by_neighbors(const std::string& cur_patch_type, const
 		}
 		else if (nn_curve.size() == 1)
 		{
-			//udpate 1209, even with only one circle neighbor, set it as true
+			// udpate 1209, even with only one circle neighbor, set it as true
 			if (curve_type[nn_curve[0]] == "Circle")
 			{
 				tmp_axis = curve_fitters[nn_curve[0]]->dirz;
 				axis_valid = true;
 			}
-
 		}
 		else
 		{
-			//line-line case
+			// line-line case
 			std::vector<vec3d> line_dirs;
 			for (auto c : nn_curve)
 			{
@@ -235,17 +231,15 @@ bool get_cylindercone_axis_by_neighbors(const std::string& cur_patch_type, const
 				tmp_axis = curve_fitters[nn_curve[0]]->dirz;
 				axis_valid = true;
 			}
-
 		}
 	}
-
 
 	return axis_valid;
 }
 
 using json = nlohmann::json;
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	bool flag_direct_fit_cylinder_cone = false; // not using nurbs, direct fit cylinder and cone
 	bool flag_input_pc_normal = true;
@@ -263,23 +257,23 @@ int main(int argc, char** argv)
 	double update_dist_to_boundary = 0.01;
 	double cylinder_radius_offset = 0.005;
 
-	double max_patch_nn_dist_ratio = 0.3; //only consider pc and nb corners and curves within radio * bb_length
+	double max_patch_nn_dist_ratio = 0.3; // only consider pc and nb corners and curves within radio * bb_length
 	double max_patch_grid_diff_ratio = 2.0;
-	double smoothness = 1.0;  //double smoothness = 0.1;
+	double smoothness = 1.0; // double smoothness = 0.1;
 
 	bool flag_seg_pc = true;
 	int dim_u_input = 20, dim_v_input = 20, dim_u_output = 20, dim_v_output = 20;
-	bool flag_abandon_oob_spline = true; //out of bound spline
+	bool flag_abandon_oob_spline = true; // out of bound spline
 	double range_obb = 1.0;
 
 	int dim_u_ctrl = 20, dim_v_ctrl = 20;
 	dim_u_ctrl = 5, dim_v_ctrl = 5;
 
-	//for patch-curve, patch-corner relation
-	double max_patch_pc_dist = 0.05; //only consider input pts close to patches
-	max_patch_pc_dist = 0.02; //only consider input pts close to patches
+	// for patch-curve, patch-corner relation
+	double max_patch_pc_dist = 0.05; // only consider input pts close to patches
+	max_patch_pc_dist = 0.02;		 // only consider input pts close to patches
 
-	double max_patch_curve_dist = 0.1, max_patch_corner_dist = 0.1, max_curve_corner_dist = 0.1; //shortest distance
+	double max_patch_curve_dist = 0.1, max_patch_corner_dist = 0.1, max_curve_corner_dist = 0.1; // shortest distance
 	bool flag_fit_patch_with_curve = true, flag_fit_patch_with_corner = true;
 
 	bool flag_only_use_near_nbs = true;
@@ -298,42 +292,20 @@ int main(int argc, char** argv)
 			.positional_help("[optional args]")
 			.show_positional_help()
 			.allow_unrecognised_options()
-			.add_options()
-			("i,input", "input complex (complex format)", cxxopts::value<std::string>())
-			("p,pc", "point cloud (ply format)", cxxopts::value<std::string>())
-			("e,extend", "extending factor for uv grid", cxxopts::value<double>()) 
-			("d,dist", "distance for extend uv-grid", cxxopts::value<double>()) 
-			("k,keepratio", "keep ratio for cutting", cxxopts::value<double>()) 
-			("curveonpatch", "curve weight on patch", cxxopts::value<int>()) 
-			("pointonpatch", "point weight on patch", cxxopts::value<int>()) 
-			("corneronpatch", "point weight on patch", cxxopts::value<int>()) 
-			("s,skip", "skip iterative step")
-			("debug", "debug patch and curve")
-			("outerone", "fit outer only once")
-			("outerzero", "not fit outer")
-			("debugfinal", "debug final output")
-			("nosegpc", "not segment point cloud")
-			("cc", "direct fit cylinder and cone")
-			("a, axisxyz", "set axis as x/y/z if it is close to normal setting")
-			("max_angle_diff_degree", "when rounding, max angle difference in degree", cxxopts::value<double>()) //default: 10
-			("set_curve_axis", "set curve axis according to patch axis in final round")
-			("patchpcdist", "patch pc dist", cxxopts::value<double>()) //default: 0.05
-			("last_iter", "last iter", cxxopts::value<int>()) //default: 5
-			("fit_other_last", "fit other patches last")
-			("use_all_nb", "when fitting, use all neighors (not include pc)")
-			("nb_th", "when not using all neighors, here to set nb threshold, default: 0.1", cxxopts::value<double>())
-			("patch_bb_ratio", "when not using all neighors, here to set patch_bb_ratio, default: 0.3", cxxopts::value<double>())
-			("h,help", "print help");
+			.add_options()("i,input", "input complex (complex format)", cxxopts::value<std::string>())("p,pc", "point cloud (ply format)", cxxopts::value<std::string>())("e,extend", "extending factor for uv grid", cxxopts::value<double>())("d,dist", "distance for extend uv-grid", cxxopts::value<double>())("k,keepratio", "keep ratio for cutting", cxxopts::value<double>())("curveonpatch", "curve weight on patch", cxxopts::value<int>())("pointonpatch", "point weight on patch", cxxopts::value<int>())("corneronpatch", "point weight on patch", cxxopts::value<int>())("s,skip", "skip iterative step")("debug", "debug patch and curve")("outerone", "fit outer only once")("outerzero", "not fit outer")("debugfinal", "debug final output")("nosegpc", "not segment point cloud")("cc", "direct fit cylinder and cone")("a, axisxyz", "set axis as x/y/z if it is close to normal setting")("max_angle_diff_degree", "when rounding, max angle difference in degree", cxxopts::value<double>()) // default: 10
+			("set_curve_axis", "set curve axis according to patch axis in final round")("patchpcdist", "patch pc dist", cxxopts::value<double>())																																																																																																																																																																																																																   // default: 0.05
+			("last_iter", "last iter", cxxopts::value<int>())																																																																																																																																																																																																																																					   // default: 5
+			("fit_other_last", "fit other patches last")("use_all_nb", "when fitting, use all neighors (not include pc)")("nb_th", "when not using all neighors, here to set nb threshold, default: 0.1", cxxopts::value<double>())("patch_bb_ratio", "when not using all neighors, here to set patch_bb_ratio, default: 0.3", cxxopts::value<double>())("h,help", "print help");
 
 		auto result = options.parse(argc, argv);
 		if (result.count("help"))
 		{
-			std::cout << options.help({ "", "Group" }) << std::endl;
+			std::cout << options.help({"", "Group"}) << std::endl;
 			exit(0);
 		}
 		if (result.count("cc"))
 			flag_direct_fit_cylinder_cone = true;
-		
+
 		if (result.count("debug"))
 		{
 			flag_debug_patch = true;
@@ -362,12 +334,12 @@ int main(int argc, char** argv)
 			max_patch_nn_dist_ratio = result["patch_bb_ratio"].as<double>();
 		}
 
-		bool flag_enlarge_tangent_cylinder_radius = false; //updata 1210, no longer used
+		bool flag_enlarge_tangent_cylinder_radius = false; // updata 1210, no longer used
 		bool flag_skip_control_fitting = false;
-		double min_cut_keep_ratio = 0.01; //if area of kept faces/area of total faces is less than this value, then switch network input 
+		double min_cut_keep_ratio = 0.01; // if area of kept faces/area of total faces is less than this value, then switch network input
 		bool flag_fit_other_last = false;
 		int last_fit_iter = 1;
-		
+
 		if (result.count("fit_other_last"))
 		{
 			flag_fit_other_last = true;
@@ -377,18 +349,17 @@ int main(int argc, char** argv)
 		{
 			last_fit_iter = result["last_iter"].as<int>();
 		}
-		
+
 		if (result.count("nosegpc"))
 		{
 			flag_seg_pc = false;
 		}
-		
 
 		if (result.count("s"))
 		{
 			flag_skip_control_fitting = true;
 		}
-		
+
 		if (result.count("k"))
 		{
 			min_cut_keep_ratio = result["k"].as<double>();
@@ -417,8 +388,8 @@ int main(int argc, char** argv)
 		{
 			max_angle_diff_degree = result["max_angle_diff_degree"].as<double>();
 		}
-		
-		double enlarge_factor = 2.5; //only used for direct enlarging uv
+
+		double enlarge_factor = 2.5; // only used for direct enlarging uv
 		if (result.count("extend"))
 		{
 			enlarge_factor = result["e"].as<double>();
@@ -430,15 +401,13 @@ int main(int argc, char** argv)
 		}
 
 		int flag_split = 10, period_split = 30;
-		
+
 		if (flag_debug)
 			period_split = 10;
 
 		int w_corneroncurve = 5, w_corneronpatch = 5, w_curveoncorner = 1, w_curveonpatch = 5, w_patchoncorner = 1, w_patchoncurve = 1;
-		
-		int w_pc_corner = 0, w_pc_curve = 0, w_pc_patch = 10;
 
-		
+		int w_pc_corner = 0, w_pc_curve = 0, w_pc_patch = 10;
 
 		int w_self_curve = 1, w_self_patch = 1, w_self_corner = 5;
 		double w_expand = 0.1, dist_expand = 0.06;
@@ -447,9 +416,8 @@ int main(int argc, char** argv)
 		{
 			dist_expand = result["d"].as<double>();
 		}
-		
-		w_pc_patch = 100, w_curveonpatch = 50, w_corneronpatch = 50;
 
+		w_pc_patch = 100, w_curveonpatch = 50, w_corneronpatch = 50;
 
 		if (result.count("curveonpatch"))
 		{
@@ -466,8 +434,8 @@ int main(int argc, char** argv)
 			w_pc_patch = result["pointonpatch"].as<int>();
 		}
 
-		auto& inputfile = result["i"].as<std::string>();
-		auto& inputprefix = inputfile.substr(0, inputfile.find_last_of("."));
+		std::string inputfile = result["i"].as<std::string>();
+		std::string inputprefix = inputfile.substr(0, inputfile.find_last_of("."));
 
 		std::vector<vec3d> corners;
 		std::vector<std::vector<vec3d>> curves, patches, patch_normals;
@@ -483,11 +451,11 @@ int main(int argc, char** argv)
 			if (is_curved_closed[i] > 0.5)
 				flag_curve_close[i] = true;
 		}
-		std::vector<CurveFitter*> curve_fitters;
-		std::vector<SurfFitter*> surf_fitters;	
+		std::vector<CurveFitter *> curve_fitters;
+		std::vector<SurfFitter *> surf_fitters;
 		std::vector<std::vector<int>> corner2curve(corners.size()), corner2patch(corners.size()), curve2corner(curve_type.size()), curve2patch(curve_type.size()), patch2curve(patch_type.size()), patch2corner(patch_type.size());
 		std::vector<std::set<int>> patch2patch(patches.size());
-		std::vector<bool> patch_flip_uv(patches.size(), false); //for cylinder and cone, flip uv so that v is the line direction
+		std::vector<bool> patch_flip_uv(patches.size(), false); // for cylinder and cone, flip uv so that v is the line direction
 
 		std::vector<std::vector<vec3d>> patches_ori(patches.size());
 		std::vector<string> patch_type_ori = patch_type;
@@ -496,7 +464,6 @@ int main(int argc, char** argv)
 		{
 			patches_ori[i] = patches[i];
 		}
-
 
 		bool flag_input_normal = false;
 		if (!patch_normals.empty())
@@ -532,7 +499,7 @@ int main(int argc, char** argv)
 			}
 		}
 
-		//patch2patch
+		// patch2patch
 		for (int i = 0; i < patches.size(); i++)
 		{
 			for (auto eid : patch2curve[i])
@@ -551,7 +518,7 @@ int main(int argc, char** argv)
 		{
 			for (size_t j = 0; j < corners.size(); j++)
 			{
-				if (patch_corner_corres(i,j) > COR_VAL_TH)
+				if (patch_corner_corres(i, j) > COR_VAL_TH)
 				{
 					patch2corner[i].push_back(j);
 					corner2patch[j].push_back(i);
@@ -559,8 +526,8 @@ int main(int argc, char** argv)
 			}
 		}
 
-		//json output
-		
+		// json output
+
 		json oj;
 		std::vector<json> patchj;
 		if (patches.front().size() == 100)
@@ -578,7 +545,7 @@ int main(int argc, char** argv)
 			j["v_closed"] = false;
 			j["with_param"] = false;
 			std::vector<double> onepatch_pts;
-			
+
 			for (size_t j = 0; j < patches[i].size(); j++)
 			{
 				for (size_t k = 0; k < 3; k++)
@@ -593,13 +560,13 @@ int main(int argc, char** argv)
 		oj["patches"] = patchj;
 		if (save_curve_corner)
 		{
-			//std::vector<YAML::Node> curve_nodes;
+			// std::vector<YAML::Node> curve_nodes;
 			json curvej;
 			for (size_t i = 0; i < curves.size(); i++)
 			{
 				json onenode;
 				onenode["type"] = curve_type[i];
-				//YAML::Node onecurve_pts = YAML::Load("[]");
+				// YAML::Node onecurve_pts = YAML::Load("[]");
 				std::vector<double> onecurve_pts;
 				for (size_t j = 0; j < curves[i].size(); j++)
 				{
@@ -608,8 +575,8 @@ int main(int argc, char** argv)
 						onecurve_pts.push_back(curves[i][j][k]);
 					}
 				}
-				//onenode["closed"] = (bool)curve_fitters[i]->closed;
-				onenode["closed"] = (bool)is_curved_closed[i]; //change to curve fitter later
+				// onenode["closed"] = (bool)curve_fitters[i]->closed;
+				onenode["closed"] = (bool)is_curved_closed[i]; // change to curve fitter later
 				onenode["pts"] = onecurve_pts;
 				curvej.push_back(onenode);
 			}
@@ -618,7 +585,7 @@ int main(int argc, char** argv)
 			for (size_t i = 0; i < corners.size(); i++)
 			{
 				json onenode;
-				//YAML::Node onecorner_pts = YAML::Load("[]");
+				// YAML::Node onecorner_pts = YAML::Load("[]");
 				std::vector<double> onecorner_pts;
 				for (size_t k = 0; k < 3; k++)
 				{
@@ -643,7 +610,6 @@ int main(int argc, char** argv)
 			patch2curvej.push_back(onecurve);
 		}
 
-
 		for (size_t i = 0; i < curves.size(); i++)
 		{
 			if (corners.size() > 0)
@@ -655,7 +621,6 @@ int main(int argc, char** argv)
 				}
 				curve2cornerj.push_back(onecurve);
 			}
-
 		}
 
 		for (size_t i = 0; i < patches.size(); i++)
@@ -669,9 +634,7 @@ int main(int argc, char** argv)
 				}
 				patch2cornerj.push_back(onepatch);
 			}
-
 		}
-		
 
 		oj["patch2curve"] = patch2curvej;
 		oj["curve2corner"] = curve2cornerj;
@@ -679,16 +642,16 @@ int main(int argc, char** argv)
 
 		std::ofstream ofs;
 		ofs.open(inputprefix + "_input.json");
-		//ofs << std::setw(2) << oj;
+		// ofs << std::setw(2) << oj;
 		ofs << oj;
 		ofs.close();
 
-		//set curve_fitters and surf_fitters
+		// set curve_fitters and surf_fitters
 		assert(curve_type.size() == curves.size());
 		assert(patch_type.size() == patches.size());
 		for (size_t i = 0; i < curve_type.size(); i++)
 		{
-			CurveFitter* cf = NULL;
+			CurveFitter *cf = NULL;
 			if (curve_type[i] == "Line")
 				cf = new LineFitter();
 			else if (curve_type[i] == "Circle")
@@ -707,7 +670,7 @@ int main(int argc, char** argv)
 
 		for (size_t i = 0; i < patch_type.size(); i++)
 		{
-			SurfFitter* sf = NULL;
+			SurfFitter *sf = NULL;
 			std::cout << "patch close: " << patch_close[i] << std::endl;
 			if (!patch_close[i] && (patch_type[i] == "Cylinder" || patch_type[i] == "Cone"))
 			{
@@ -738,7 +701,7 @@ int main(int argc, char** argv)
 				}
 				else if (patch_type[i] == "Torus")
 				{
-					sf = new NURBSSurfFitter(2, 2, 4, 4); //using nurbs to fit torus
+					sf = new NURBSSurfFitter(2, 2, 4, 4); // using nurbs to fit torus
 					patch_type[i] = "BSpline";
 				}
 				else if (patch_type[i] == "Cone")
@@ -776,7 +739,7 @@ int main(int argc, char** argv)
 				}
 				else if (patch_type[i] == "Torus")
 				{
-					sf = new NURBSSurfFitter(3, 2, 7, 4); //using nurbs to fit torus
+					sf = new NURBSSurfFitter(3, 2, 7, 4); // using nurbs to fit torus
 					patch_type[i] = "BSpline";
 				}
 				else if (patch_type[i] == "Cone")
@@ -795,7 +758,6 @@ int main(int argc, char** argv)
 					sf = new SphereFitter();
 				else if (patch_type[i] == "BSpline")
 					sf = new NURBSSurfFitter(3, 3, dim_u_ctrl, dim_v_ctrl, smoothness);
-
 			}
 			if (!patch_flip_uv[i])
 				sf->u_closed = patch_close[i];
@@ -803,14 +765,14 @@ int main(int argc, char** argv)
 			{
 				sf->v_closed = patch_close[i];
 			}
-			
-			//set closeness
-			//u v closeness is decided by flipping or not.
+
+			// set closeness
+			// u v closeness is decided by flipping or not.
 			assert(sf != NULL);
 			surf_fitters.push_back(sf);
 		}
 
-		//for patch extension
+		// for patch extension
 		std::vector<std::vector<vec3d>> patches_expand(patches.size());
 		for (size_t i = 0; i < patches.size(); i++)
 		{
@@ -822,11 +784,11 @@ int main(int argc, char** argv)
 			expand_grid_points(patches[i], dim_u, dim_v, dist_expand, patch_close[i], patches_expand[i]);
 		}
 
-		//if (result.count("p"))
+		// if (result.count("p"))
 		assert(result.count("p"));
-		auto& inputpc = result["p"].as<std::string>();
+		auto &inputpc = result["p"].as<std::string>();
 		MyPointCloud pc;
-		pc.load_ply(inputpc.c_str(), true); //second parameter: with normals
+		pc.load_ply(inputpc.c_str(), true); // second parameter: with normals
 
 		std::vector<vec3d> curve_pcnn;
 		for (size_t i = 0; i < curve_type.size(); i++)
@@ -878,7 +840,7 @@ int main(int argc, char** argv)
 			}
 		}
 
-		std::vector<int> control_dims({ 5, 5 });
+		std::vector<int> control_dims({5, 5});
 
 		if (flag_skip_control_fitting)
 			control_dims.clear();
@@ -888,17 +850,17 @@ int main(int argc, char** argv)
 			control_dims.clear();
 			control_dims.push_back(5);
 		}
-		
+
 		std::vector<std::vector<vec3d>> patch_pcs(patches.size());
 		std::vector<std::vector<vec3d>> patch_pc_normals(patches.size());
- 		std::vector<std::vector<vec3d>> patch_grids(patches.size());
+		std::vector<std::vector<vec3d>> patch_grids(patches.size());
 		if (result.count("outerzero"))
 		{
 			control_dims.clear();
-			//update u v control of splines
+			// update u v control of splines
 			for (size_t i = 0; i < patch_type_ori.size(); i++)
 			{
-				//set patch grids
+				// set patch grids
 				surf_fitters[i]->set_uv_split(dim_u_output, dim_v_output);
 				surf_fitters[i]->get_grid_pts();
 				patch_grids[i] = surf_fitters[i]->grid_pts;
@@ -925,34 +887,32 @@ int main(int argc, char** argv)
 					std::cout << "patch id: " << i << " out of range in iter 1" << std::endl;
 				}
 			}
-
-
 		}
 
 		for (size_t control_iter = 0; control_iter < control_dims.size(); control_iter++)
 		{
-			//patch fitting based on curves and corners
+			// patch fitting based on curves and corners
 			std::cout << "control pts update iter: " << control_iter << std::endl;
 			if (control_iter == control_dims.size() - 1)
 			{
-				//update u v control of splines
+				// update u v control of splines
 				for (size_t i = 0; i < patch_type_ori.size(); i++)
 				{
-					//set patch grids
+					// set patch grids
 					surf_fitters[i]->set_uv_split(dim_u_output, dim_v_output);
 					surf_fitters[i]->get_grid_pts();
 					patch_grids[i] = surf_fitters[i]->grid_pts;
 					if (patch_type_ori[i] == "BSpline")
 					{
-						//surf_fitters[i]->get_grid_pts();
+						// surf_fitters[i]->get_grid_pts();
 						std::vector<vec3d> tmp = surf_fitters[i]->grid_pts;
 						delete surf_fitters[i];
 						surf_fitters[i] = NULL;
-						//sf = new NURBSSurfFitter(3, 3, dim_u_ctrl, dim_v_ctrl, smoothness);
+						// sf = new NURBSSurfFitter(3, 3, dim_u_ctrl, dim_v_ctrl, smoothness);
 						surf_fitters[i] = new NURBSSurfFitter(3, 3, control_dims[control_iter], control_dims[control_iter], smoothness);
 						surf_fitters[i]->u_closed = patch_close[i];
-						
-						//fit once for projection
+
+						// fit once for projection
 						surf_fitters[i]->set_points(tmp);
 						surf_fitters[i]->save_input_patch_obj(std::to_string(i) + "_input_patch_20.obj");
 						surf_fitters[i]->fitting();
@@ -984,7 +944,7 @@ int main(int argc, char** argv)
 					th_patch_pc[i] = std::min(max_patch_pc_dist, max_patch_nn_dist_ratio * patch_ranges[i]);
 				}
 
-				//get patch pcs, range
+				// get patch pcs, range
 				patch_pcs.clear();
 				patch_pcs.resize(patches.size());
 
@@ -993,8 +953,8 @@ int main(int argc, char** argv)
 					patch_pc_normals.clear();
 					patch_pc_normals.resize(patches.size());
 				}
-				
-				if (flag_seg_pc) //set as true
+
+				if (flag_seg_pc) // set as true
 				{
 					for (size_t i = 0; i < pc.pts.size(); i++)
 					{
@@ -1020,16 +980,17 @@ int main(int argc, char** argv)
 							if (dist_pc2patch[i][j] < max_patch_pc_dist)
 							{
 								patch_pcs[j].push_back(pc.pts[i]);
-								if (flag_input_pc_normal) patch_pc_normals[j].push_back(pc.normals[i]);
+								if (flag_input_pc_normal)
+									patch_pc_normals[j].push_back(pc.normals[i]);
 							}
 						}
 					}
 				}
 
-				//check nn pc and refit
+				// check nn pc and refit
 				for (size_t i = 0; i < patches.size(); i++)
 				{
-					//get patch range;
+					// get patch range;
 					double patch_range = patch_ranges[i];
 					double cur_th_patch_curve = std::min(max_patch_curve_dist, max_patch_nn_dist_ratio * patch_range);
 					double cur_th_patch_corner = std::min(max_patch_corner_dist, max_patch_nn_dist_ratio * patch_range);
@@ -1061,9 +1022,7 @@ int main(int argc, char** argv)
 							else
 							{
 								cur_valid_curve.insert(cur_valid_curve.end(), curves[patch2curve[i][j]].begin(), curves[patch2curve[i][j]].end());
-
 							}
-							
 						}
 					}
 
@@ -1090,10 +1049,8 @@ int main(int argc, char** argv)
 							{
 								cur_valid_corner.push_back(all_nn_corners[j]);
 							}
-							
 						}
 					}
-
 
 					if (patch_type[i] == "BSpline")
 					{
@@ -1141,7 +1098,7 @@ int main(int argc, char** argv)
 						surf_fitters[i]->set_points(fitted_pts);
 						if (patch_type[i] == "Cylinder" || patch_type[i] == "Cone")
 						{
-							//directly fitting cylinder and cone
+							// directly fitting cylinder and cone
 							std::vector<vec3d> fitted_normals, tmp, tmp_normals;
 							surf_fitters[i]->projection_with_normal(patches[i], tmp, fitted_normals);
 							if (flag_input_pc_normal)
@@ -1151,7 +1108,7 @@ int main(int argc, char** argv)
 							}
 							else
 							{
-								//get projection normals
+								// get projection normals
 								surf_fitters[i]->projection_with_normal(patch_pcs[i], tmp, tmp_normals);
 								for (size_t j = 0; j < w_pc_patch; j++)
 									fitted_normals.insert(fitted_normals.end(), tmp_normals.begin(), tmp_normals.end());
@@ -1189,13 +1146,12 @@ int main(int argc, char** argv)
 								}
 								else
 								{
-									//use aqd fitting
+									// use aqd fitting
 									surf_fitters[i]->flag_using_aqd = true;
 								}
 							}
 						}
 					}
-
 
 					surf_fitters[i]->fitting();
 					if (flag_patch_self_proj)
@@ -1229,7 +1185,7 @@ int main(int argc, char** argv)
 					}
 				}
 
-				//segmentation
+				// segmentation
 				std::vector<vec3d> valid_pcs;
 				std::vector<int> valid_mask;
 				for (size_t i = 0; i < patches.size(); i++)
@@ -1245,7 +1201,7 @@ int main(int argc, char** argv)
 					save_pts_color_ply((inputprefix + "_iter_" + std::to_string(control_iter) + "_" + std::to_string(outiter) + "_pc_seg.ply"), valid_pcs, valid_mask);
 				}
 			}
-			
+
 			if (control_iter == control_dims.size() - 1)
 			{
 				for (size_t i = 0; i < patches.size(); i++)
@@ -1254,7 +1210,7 @@ int main(int argc, char** argv)
 					get_pcs_bb(patch_grids[i], bb_min, bb_max);
 					bb_diff = bb_max - bb_min;
 					double prev_range = std::max(bb_diff[0], std::max(bb_diff[1], bb_diff[2]));
-					
+
 					surf_fitters[i]->set_uv_split(dim_u_output, dim_v_output);
 					surf_fitters[i]->get_grid_pts();
 					get_pcs_bb(surf_fitters[i]->grid_pts, bb_min, bb_max);
@@ -1270,8 +1226,8 @@ int main(int argc, char** argv)
 					}
 				}
 			}
-			
-			//curve fitting based on patches and corners
+
+			// curve fitting based on patches and corners
 			for (size_t i = 0; i < curves.size(); i++)
 			{
 				std::vector<vec3d> fitted_pts, bspline_nongrid_pts;
@@ -1307,7 +1263,6 @@ int main(int argc, char** argv)
 						{
 							curvecorners.push_back(curvecorners_init[j]);
 						}
-						
 					}
 
 					for (size_t j = 0; j < w_corneroncurve; j++)
@@ -1318,7 +1273,6 @@ int main(int argc, char** argv)
 					if (flag_debug_curve)
 						save_pts_ply(std::to_string(i) + "curve_corner.ply", curvecorners);
 
-
 					std::vector<vec3d> curvepatches;
 					for (size_t j = 0; j < curve2patch[i].size(); j++)
 					{
@@ -1328,19 +1282,19 @@ int main(int argc, char** argv)
 						for (size_t k = 1; k < curves[i].size(); k++)
 						{
 							double cur_dist = (curves[i][k] - tmp[k]).Length();
-							if (min_dist > cur_dist) min_dist = cur_dist;
+							if (min_dist > cur_dist)
+								min_dist = cur_dist;
 						}
-						
+
 						if (flag_only_use_near_nbs)
 						{
-							if (min_dist < max_patch_curve_dist) //not consiser bb yet							
+							if (min_dist < max_patch_curve_dist) // not consiser bb yet
 								curvepatches.insert(curvepatches.end(), tmp.begin(), tmp.end());
 						}
 						else
 						{
 							curvepatches.insert(curvepatches.end(), tmp.begin(), tmp.end());
 						}
-						
 					}
 
 					for (size_t j = 0; j < w_patchoncurve; j++)
@@ -1350,15 +1304,14 @@ int main(int argc, char** argv)
 
 					if (flag_debug_curve)
 						save_pts_ply(std::to_string(i) + "curve_patches.ply", curvepatches);
-
 				}
 				else
 				{
-					//set bspline non grid, only consider corner
+					// set bspline non grid, only consider corner
 					std::vector<vec3d> curvecorners;
 					for (size_t j = 0; j < curve2corner[i].size(); j++)
 					{
-						//no thresholding tmp
+						// no thresholding tmp
 						curvecorners.push_back(corners[curve2corner[i][j]]);
 					}
 					bspline_nongrid_pts.insert(bspline_nongrid_pts.end(), curvecorners.begin(), curvecorners.end());
@@ -1376,13 +1329,12 @@ int main(int argc, char** argv)
 				curve_fitters[i]->fitting();
 				curve_fitters[i]->projection(curves[i], curve_fitters[i]->projection_pts, true);
 
-
 				if (flag_debug_curve)
 					save_pts_ply(std::to_string(i) + "curve_proj.ply", curve_fitters[i]->projection_pts);
-				//update curves
+				// update curves
 				curves[i] = curve_fitters[i]->projection_pts;
 			}
-			
+
 			for (size_t i = 0; i < corners.size(); i++)
 			{
 				std::vector<vec3d> corner_in;
@@ -1390,16 +1342,15 @@ int main(int argc, char** argv)
 				for (size_t j = 0; j < w_self_corner; j++)
 				{
 					corner_in.push_back(corners[i]);
-
 				}
 				std::vector<vec3d> onecorner;
 				onecorner.push_back(corners[i]);
-				//curve to corner
+				// curve to corner
 				for (size_t j = 0; j < corner2curve[i].size(); j++)
 				{
 					std::vector<vec3d> tmp_vec;
 					curve_fitters[corner2curve[i][j]]->projection(onecorner, tmp_vec, false);
-					
+
 					if (flag_only_use_near_nbs)
 					{
 						if ((onecorner[0] - tmp_vec[0]).Length() < max_curve_corner_dist)
@@ -1417,10 +1368,9 @@ int main(int argc, char** argv)
 							corner_in.push_back(tmp_vec[0]);
 						}
 					}
-					
 				}
 
-				//patch to corner
+				// patch to corner
 				for (size_t j = 0; j < corner2patch[i].size(); j++)
 				{
 					std::vector<vec3d> tmp_vec;
@@ -1442,10 +1392,9 @@ int main(int argc, char** argv)
 							corner_in.push_back(tmp_vec[0]);
 						}
 					}
-					
 				}
 
-				//average
+				// average
 				vec3d avg_pt(0.0, 0.0, 0.0);
 				for (size_t j = 0; j < corner_in.size(); j++)
 				{
@@ -1455,7 +1404,7 @@ int main(int argc, char** argv)
 			}
 		}
 
-		//save NURBS yaml file
+		// save NURBS yaml file
 
 		if (!flag_direct_fit_cylinder_cone)
 		{
@@ -1486,13 +1435,13 @@ int main(int argc, char** argv)
 			oj["patches"] = patchj;
 			if (save_curve_corner)
 			{
-				//std::vector<YAML::Node> curve_nodes;
+				// std::vector<YAML::Node> curve_nodes;
 				json curvej;
 				for (size_t i = 0; i < curves.size(); i++)
 				{
 					json onenode;
 					onenode["type"] = curve_type[i];
-					//YAML::Node onecurve_pts = YAML::Load("[]");
+					// YAML::Node onecurve_pts = YAML::Load("[]");
 					std::vector<double> onecurve_pts;
 					for (size_t j = 0; j < curves[i].size(); j++)
 					{
@@ -1501,8 +1450,8 @@ int main(int argc, char** argv)
 							onecurve_pts.push_back(curves[i][j][k]);
 						}
 					}
-					//onenode["closed"] = (bool)curve_fitters[i]->closed;
-					onenode["closed"] = (bool)curve_fitters[i]->closed; //change to curve fitter later
+					// onenode["closed"] = (bool)curve_fitters[i]->closed;
+					onenode["closed"] = (bool)curve_fitters[i]->closed; // change to curve fitter later
 					onenode["pts"] = onecurve_pts;
 					curvej.push_back(onenode);
 				}
@@ -1511,7 +1460,7 @@ int main(int argc, char** argv)
 				for (size_t i = 0; i < corners.size(); i++)
 				{
 					json onenode;
-					//YAML::Node onecorner_pts = YAML::Load("[]");
+					// YAML::Node onecorner_pts = YAML::Load("[]");
 					std::vector<double> onecorner_pts;
 					for (size_t k = 0; k < 3; k++)
 					{
@@ -1522,14 +1471,13 @@ int main(int argc, char** argv)
 				}
 				oj["corners"] = cornerj;
 			}
-			
-			//fit cylinder and cone again, abandon those with huge distance with NURBS surface
-			std::vector<bool> flag_using_nurbs(patches.size(), true);
 
+			// fit cylinder and cone again, abandon those with huge distance with NURBS surface
+			std::vector<bool> flag_using_nurbs(patches.size(), true);
 
 			for (size_t last_iter = 0; last_iter < last_fit_iter; last_iter++)
 			{
-				//update cylinder and cone
+				// update cylinder and cone
 				std::cout << "last round fitting " << last_iter << std::endl;
 				std::vector<double> patch_ranges(patches.size()), th_patch_pc(patches.size());
 				for (size_t i = 0; i < patches.size(); i++)
@@ -1540,7 +1488,7 @@ int main(int argc, char** argv)
 					patch_ranges[i] = std::max(bb_diff[0], std::max(bb_diff[1], bb_diff[2]));
 					th_patch_pc[i] = std::min(max_patch_pc_dist, max_patch_nn_dist_ratio * patch_ranges[i]);
 				}
-				
+
 				for (size_t i = 0; i < patches.size(); i++)
 				{
 					if (patch_type[i] == "Plane" || patch_type[i] == "Sphere")
@@ -1550,7 +1498,7 @@ int main(int argc, char** argv)
 					if (last_iter == 0 && (patch_type_ori[i] == "Cylinder" || patch_type_ori[i] == "Cone"))
 					{
 						flag_fit_current = true;
-						//using projection as input
+						// using projection as input
 						std::vector<vec3d> cur_pts, cur_normals;
 						surf_fitters[i]->projection_with_normal(patches[i], cur_pts, cur_normals);
 
@@ -1562,7 +1510,7 @@ int main(int argc, char** argv)
 							cur_normals.insert(cur_normals.end(), pc_normals.begin(), pc_normals.end());
 						}
 
-						SurfFitter* sf = NULL, * sf_fix_axis = NULL;
+						SurfFitter *sf = NULL, *sf_fix_axis = NULL;
 						if (patch_type_ori[i] == "Cylinder")
 						{
 							sf = new CylinderFitter(flag_using_aqd);
@@ -1573,7 +1521,6 @@ int main(int argc, char** argv)
 						}
 						sf->u_closed = surf_fitters[i]->u_closed;
 						sf->v_closed = surf_fitters[i]->v_closed;
-
 
 						sf->set_points(cur_pts);
 						sf->set_normals(cur_normals);
@@ -1615,7 +1562,7 @@ int main(int argc, char** argv)
 								}
 
 								sf_fix_axis->set_axis(tmp_axis);
-								//refit
+								// refit
 								sf_fix_axis->fitting();
 								sf_fix_axis->get_self_projection(true);
 								if (flag_debug_patch)
@@ -1649,7 +1596,7 @@ int main(int argc, char** argv)
 							save_pts_ply(std::to_string(i) + "_cc_proj.ply", sf->projection_pts);
 						}
 
-						//if grid out of range, check back to geometric tools fitting
+						// if grid out of range, check back to geometric tools fitting
 						bool flag_grid_valid = true;
 						sf->set_uv_split(dim_u_output, dim_v_output);
 						sf->get_grid_pts();
@@ -1670,7 +1617,7 @@ int main(int argc, char** argv)
 						if (!flag_grid_valid)
 						{
 							std::cout << "out of range patch when fitting cone/cylinder: " << i << std::endl;
-							SurfFitter* sf_gt = NULL;
+							SurfFitter *sf_gt = NULL;
 							if (patch_type_ori[i] == "Cylinder")
 							{
 								sf_gt = new CylinderFitter(false);
@@ -1682,7 +1629,7 @@ int main(int argc, char** argv)
 							sf_gt->u_closed = surf_fitters[i]->u_closed;
 							sf_gt->v_closed = surf_fitters[i]->v_closed;
 							sf_gt->set_points(cur_pts);
-							//refit
+							// refit
 							sf_gt->fitting();
 							sf_gt->get_self_projection(true);
 							double avg_error_fix_axis = 0.0;
@@ -1706,13 +1653,12 @@ int main(int argc, char** argv)
 						std::cout << "cylinder cone error: " << avg_error << std::endl;
 						if (true)
 						{
-							//update surf-fitter
+							// update surf-fitter
 							delete surf_fitters[i];
 							surf_fitters[i] = NULL;
 							surf_fitters[i] = sf;
 							flag_using_nurbs[i] = false;
 						}
-
 
 						if (flag_patch_self_proj)
 						{
@@ -1730,8 +1676,8 @@ int main(int argc, char** argv)
 							}
 						}
 					}
-					
-					//fit other patches
+
+					// fit other patches
 					if (flag_fit_other_last && !flag_fit_current)
 					{
 						double patch_range = patch_ranges[i];
@@ -1765,9 +1711,7 @@ int main(int argc, char** argv)
 								else
 								{
 									cur_valid_curve.insert(cur_valid_curve.end(), curves[patch2curve[i][j]].begin(), curves[patch2curve[i][j]].end());
-
 								}
-								
 							}
 						}
 
@@ -1793,11 +1737,9 @@ int main(int argc, char** argv)
 								else
 								{
 									cur_valid_corner.push_back(all_nn_corners[j]);
-
 								}
 							}
 						}
-
 
 						if (patch_type_ori[i] == "BSpline" || patch_type_ori[i] == "Torus")
 						{
@@ -1854,7 +1796,7 @@ int main(int argc, char** argv)
 								}
 								else
 								{
-									//get projection normals
+									// get projection normals
 									surf_fitters[i]->projection_with_normal(patch_pcs[i], tmp, tmp_normals);
 									for (size_t j = 0; j < w_pc_patch; j++)
 										fitted_normals.insert(fitted_normals.end(), tmp_normals.begin(), tmp_normals.end());
@@ -1892,13 +1834,12 @@ int main(int argc, char** argv)
 									}
 									else
 									{
-										//use aqd fitting
+										// use aqd fitting
 										surf_fitters[i]->flag_using_aqd = true;
 									}
 								}
 							}
 						}
-
 
 						surf_fitters[i]->fitting();
 						if (flag_patch_self_proj)
@@ -1920,18 +1861,16 @@ int main(int argc, char** argv)
 						surf_fitters[i]->get_grid_pts();
 						patch_grids[i] = surf_fitters[i]->grid_pts;
 					}
-					
 
-					
 					if (flag_expand_para_range_last && last_iter == last_fit_iter - 1)
 					{
-						//update uv range
+						// update uv range
 						if (!(patch_type_ori[i] == "BSpline" || patch_type_ori[i] == "Torus"))
 						{
-							//not work for Spline
-							std::vector<vec3d> input_pts_nbs, tmp; //consider all nbs
+							// not work for Spline
+							std::vector<vec3d> input_pts_nbs, tmp; // consider all nbs
 							input_pts_nbs.insert(input_pts_nbs.end(), patches[i].begin(), patches[i].end());
-							
+
 							for (size_t j = 0; j < patch2curve[i].size(); j++)
 							{
 								input_pts_nbs.insert(input_pts_nbs.end(), curves[patch2curve[i][j]].begin(), curves[patch2curve[i][j]].end());
@@ -1941,20 +1880,17 @@ int main(int argc, char** argv)
 							{
 								input_pts_nbs.push_back(corners[patch2corner[i][j]]);
 							}
-							
+
 							surf_fitters[i]->projection(input_pts_nbs, tmp, true);
 
 							surf_fitters[i]->set_uv_split(dim_u_output, dim_v_output);
 							surf_fitters[i]->get_grid_pts();
 							patch_grids[i] = surf_fitters[i]->grid_pts;
 						}
-
-						
 					}
-
 				}
 
-				//increase patch weight on curve and corner
+				// increase patch weight on curve and corner
 				w_patchoncurve = 3;
 				w_patchoncorner = 3;
 
@@ -1969,7 +1905,6 @@ int main(int argc, char** argv)
 					if (flag_debug_curve)
 						save_pts_ply(std::to_string(i) + "curve_init.ply", fitted_pts);
 
-					
 					if (curve_type[i] != "BSpline")
 					{
 						// curve corners
@@ -1995,7 +1930,6 @@ int main(int argc, char** argv)
 							{
 								curvecorners.push_back(curvecorners_init[j]);
 							}
-							
 						}
 
 						for (size_t j = 0; j < w_corneroncurve; j++)
@@ -2006,7 +1940,6 @@ int main(int argc, char** argv)
 						if (flag_debug_curve)
 							save_pts_ply(std::to_string(i) + "curve_corner.ply", curvecorners);
 
-
 						std::vector<vec3d> curvepatches;
 						for (size_t j = 0; j < curve2patch[i].size(); j++)
 						{
@@ -2016,12 +1949,13 @@ int main(int argc, char** argv)
 							for (size_t k = 1; k < curves[i].size(); k++)
 							{
 								double cur_dist = (curves[i][k] - tmp[k]).Length();
-								if (min_dist > cur_dist) min_dist = cur_dist;
+								if (min_dist > cur_dist)
+									min_dist = cur_dist;
 							}
-							
+
 							if (flag_only_use_near_nbs)
 							{
-								if (min_dist < max_patch_curve_dist) //not consiser bb yet							
+								if (min_dist < max_patch_curve_dist) // not consiser bb yet
 									curvepatches.insert(curvepatches.end(), tmp.begin(), tmp.end());
 							}
 							else
@@ -2037,15 +1971,14 @@ int main(int argc, char** argv)
 
 						if (flag_debug_curve)
 							save_pts_ply(std::to_string(i) + "curve_patches.ply", curvepatches);
-
 					}
 					else
 					{
-						//set bspline non grid, only consider corner
+						// set bspline non grid, only consider corner
 						std::vector<vec3d> curvecorners;
 						for (size_t j = 0; j < curve2corner[i].size(); j++)
 						{
-							//thresholding
+							// thresholding
 							curvecorners.push_back(corners[curve2corner[i][j]]);
 						}
 						bspline_nongrid_pts.insert(bspline_nongrid_pts.end(), curvecorners.begin(), curvecorners.end());
@@ -2053,7 +1986,7 @@ int main(int argc, char** argv)
 						bspline_nongrid_weight.insert(bspline_nongrid_weight.end(), curvecorners_weight.begin(), curvecorners_weight.end());
 					}
 
-					//save_pts_ply("tmp_pts.ply", fitted_pts);
+					// save_pts_ply("tmp_pts.ply", fitted_pts);
 					if (curve_type[i] != "BSpline")
 						curve_fitters[i]->set_points(fitted_pts);
 					else
@@ -2064,7 +1997,7 @@ int main(int argc, char** argv)
 
 					if (flag_set_curve_axis && curve_type[i] == "Circle")
 					{
-						//only for circle, if it is neighboring cylinders or cones, set axis as their average
+						// only for circle, if it is neighboring cylinders or cones, set axis as their average
 						std::vector<vec3d> axis_cands;
 
 						for (size_t j = 0; j < curve2patch[i].size(); j++)
@@ -2104,7 +2037,7 @@ int main(int argc, char** argv)
 					}
 
 					curve_fitters[i]->fitting();
-					
+
 					bool cur_para_valid = true;
 					if (curve_type[i] == "Ellipse")
 					{
@@ -2125,7 +2058,7 @@ int main(int argc, char** argv)
 						curve_fitters[i]->projection(curves[i], curve_fitters[i]->projection_pts, true);
 						if (flag_debug_curve)
 							save_pts_ply(std::to_string(i) + "curve_proj.ply", curve_fitters[i]->projection_pts);
-						//update curves
+						// update curves
 						curves[i] = curve_fitters[i]->projection_pts;
 					}
 
@@ -2133,7 +2066,7 @@ int main(int argc, char** argv)
 					{
 						if (curve_type[i] != "BSpline")
 						{
-							//re-param
+							// re-param
 							std::vector<vec3d> tmp;
 							std::cout << "update curve range last: " << i << std::endl;
 							curve_fitters[i]->projection(fitted_pts, tmp, true);
@@ -2146,11 +2079,10 @@ int main(int argc, char** argv)
 							curves[i] = curve_fitters[i]->seg_pts;
 						}
 					}
-				
 				}
 
-				//save all curves
-				//corner fitting based on curves and curves
+				// save all curves
+				// corner fitting based on curves and curves
 				for (size_t i = 0; i < corners.size(); i++)
 				{
 					std::vector<vec3d> corner_in;
@@ -2158,11 +2090,10 @@ int main(int argc, char** argv)
 					for (size_t j = 0; j < w_self_corner; j++)
 					{
 						corner_in.push_back(corners[i]);
-
 					}
 					std::vector<vec3d> onecorner;
 					onecorner.push_back(corners[i]);
-					//curve to corner
+					// curve to corner
 					for (size_t j = 0; j < corner2curve[i].size(); j++)
 					{
 						std::vector<vec3d> tmp_vec;
@@ -2185,10 +2116,9 @@ int main(int argc, char** argv)
 								corner_in.push_back(tmp_vec[0]);
 							}
 						}
-						
 					}
 
-					//patch to corner
+					// patch to corner
 					for (size_t j = 0; j < corner2patch[i].size(); j++)
 					{
 						std::vector<vec3d> tmp_vec;
@@ -2210,10 +2140,9 @@ int main(int argc, char** argv)
 								corner_in.push_back(tmp_vec[0]);
 							}
 						}
-						
 					}
 
-					//average
+					// average
 					vec3d avg_pt(0.0, 0.0, 0.0);
 					for (size_t j = 0; j < corner_in.size(); j++)
 					{
@@ -2225,14 +2154,14 @@ int main(int argc, char** argv)
 		}
 
 		std::vector<bool> curve_validness(curves.size(), true);
-		
+
 		std::vector<vec3d> all_grid_pts;
 		for (size_t i = 0; i < patches.size(); i++)
 		{
 			all_grid_pts.insert(all_grid_pts.end(), patch_grids[i].begin(), patch_grids[i].end());
 		}
 
-		//output json
+		// output json
 		patchj.clear();
 		for (size_t i = 0; i < patches.size(); i++)
 		{
@@ -2251,7 +2180,7 @@ int main(int argc, char** argv)
 				std::vector<double> onepatch_pts;
 				if (flag_abandon_oob_spline)
 				{
-					//check grid_pts
+					// check grid_pts
 					flag_grid_valid = true;
 					for (size_t j = 0; j < patch_grids[i].size(); j++)
 					{
@@ -2291,10 +2220,10 @@ int main(int argc, char** argv)
 
 			if (!flag_grid_valid)
 			{
-				//for sphere, simply use projection
+				// for sphere, simply use projection
 				if (patches[i].size() != dim_u_output * dim_v_output)
 				{
-					//input 20, output 40
+					// input 20, output 40
 					surf_fitters[i]->set_points(patches[i]);
 					surf_fitters[i]->subdivide_grid(2);
 				}
@@ -2306,8 +2235,8 @@ int main(int argc, char** argv)
 				surf_fitters[i]->get_self_projection();
 				j["u_dim"] = surf_fitters[i]->dim_u_input;
 				j["v_dim"] = surf_fitters[i]->dim_v_input;
-				//save_pts_ply("sphere.ply", surf_fitters[i]->projection_pts);
-				//YAML::Node onepatch_pts = YAML::Load("[]");
+				// save_pts_ply("sphere.ply", surf_fitters[i]->projection_pts);
+				// YAML::Node onepatch_pts = YAML::Load("[]");
 				std::vector<double> onepatch_pts;
 				for (size_t j = 0; j < surf_fitters[i]->projection_pts.size(); j++)
 				{
@@ -2318,15 +2247,15 @@ int main(int argc, char** argv)
 				}
 				j["grid"] = onepatch_pts;
 			}
-			
-			//parametric part
+
+			// parametric part
 			if (last_fit_iter != 0 && (patch_type_ori[i] != "BSpline" && patch_type_ori[i] != "Torus"))
 			{
 				j["with_param"] = true;
 				std::vector<double> param(7, 0.0);
 				if (patch_type_ori[i] == "Plane")
 				{
-					PlaneFitter* pf = dynamic_cast<PlaneFitter*>(surf_fitters[i]);
+					PlaneFitter *pf = dynamic_cast<PlaneFitter *>(surf_fitters[i]);
 					for (size_t j = 0; j < 3; j++)
 					{
 						param[j] = pf->zdir[j];
@@ -2335,7 +2264,7 @@ int main(int argc, char** argv)
 				}
 				else if (patch_type_ori[i] == "Sphere")
 				{
-					SphereFitter* sf = dynamic_cast<SphereFitter*>(surf_fitters[i]);
+					SphereFitter *sf = dynamic_cast<SphereFitter *>(surf_fitters[i]);
 					for (size_t j = 0; j < 3; j++)
 					{
 						param[j] = sf->loc[j];
@@ -2344,12 +2273,12 @@ int main(int argc, char** argv)
 				}
 				else if (patch_type_ori[i] == "Cylinder")
 				{
-					CylinderFitter* cf = dynamic_cast<CylinderFitter*>(surf_fitters[i]);
+					CylinderFitter *cf = dynamic_cast<CylinderFitter *>(surf_fitters[i]);
 					for (size_t j = 0; j < 3; j++)
 					{
 						param[j] = cf->zdir[j];
 					}
-					
+
 					for (size_t j = 0; j < 3; j++)
 					{
 						param[j + 3] = cf->loc[j];
@@ -2358,13 +2287,13 @@ int main(int argc, char** argv)
 				}
 				else if (patch_type_ori[i] == "Cone")
 				{
-					ConeFitter* cf = dynamic_cast<ConeFitter*>(surf_fitters[i]);
+					ConeFitter *cf = dynamic_cast<ConeFitter *>(surf_fitters[i]);
 					for (size_t j = 0; j < 3; j++)
 					{
 						param[j] = cf->zdir[j];
 					}
 
-					//no matter sfpn or aqd is used, radius should be zero, loc equals to apex
+					// no matter sfpn or aqd is used, radius should be zero, loc equals to apex
 					std::cout << "cone radius: " << cf->radius << std::endl;
 					assert(std::abs(cf->radius) < 0.00001);
 					for (size_t j = 0; j < 3; j++)
@@ -2372,12 +2301,11 @@ int main(int argc, char** argv)
 						param[j + 3] = cf->loc[j];
 					}
 					param[6] = cf->angle;
-					
 				}
 
 				j["param"] = param;
 			}
-			
+
 			patchj.push_back(j);
 		}
 
@@ -2421,9 +2349,8 @@ int main(int argc, char** argv)
 		ofs << oj;
 		ofs.close();
 		return 1;
-
 	}
-	catch (const cxxopts::OptionException& e)
+	catch (const cxxopts::OptionException &e)
 	{
 		std::cout << "error parsing options: " << e.what() << std::endl;
 		exit(1);
