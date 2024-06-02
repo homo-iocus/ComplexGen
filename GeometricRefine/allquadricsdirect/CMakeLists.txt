@@ -12,4 +12,4 @@ set(CMAKE_DEBUG_POSTFIX "d")
 ADD_LIBRARY(allquadricsdirect STATIC ${all_files})
 
 # set_target_properties(allquadricsdirect PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(allquadricsdirect PUBLIC debug libf2cd debug clapackd debug BLASd optimized libf2c optimized clapack optimized BLAS)
+target_link_libraries(allquadricsdirect PUBLIC debug pthread debug lapackd debug blas optimized pthread optimized lapack optimized blas)
