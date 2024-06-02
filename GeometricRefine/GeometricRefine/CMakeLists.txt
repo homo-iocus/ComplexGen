@@ -25,6 +25,6 @@ set(CMAKE_DEBUG_POSTFIX "d")
 # add_definitions(/bigobj)
 add_executable(GeometricRefine ${project_cpps})
 target_link_libraries(GeometricRefine PUBLIC debug allquadricsdirectd debug yaml-cppd optimized allquadricsdirect optimized yaml-cpp)
-target_link_libraries(GeometricRefine PUBLIC debug pthread debug lapack debug blas optimized clapack optimized BLAS)
+target_link_libraries(GeometricRefine PUBLIC debug pthread debug lapack debug blas optimized lapack optimized blas)
 
 
